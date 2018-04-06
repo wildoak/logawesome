@@ -1,0 +1,45 @@
+{
+  "name": "logawesome",
+  "version": "0.0.1",
+  "description": "Rudimentary logging implementation",
+  "main": "lib/index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "babel -d ./lib src",
+    "build:debug": "babel -s -d ./lib src",
+    "test": "ava --verbose",
+    "test:coverage": "nyc $npm_execpath run test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "clean": "rm -rf lib  &&  rm -rf .nyc_output"
+  },
+  "keywords": [
+    "log",
+    "logging"
+  ],
+  "author": "Philipp Renoth <renoth@wildoak.de>",
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "coveralls": "^3.0.0",
+    "nyc": "^11.6.0",
+    "rimraf": "^2.6.2",
+    "sinon": "^4.3.0"
+  },
+  "ava": {
+    "require": [
+      "babel-register",
+      "babel-polyfill"
+    ],
+    "babel": "inherit",
+    "failFast": true
+  },
+  "dependencies": {
+    "debug": "^3.1.0"
+  }
+}

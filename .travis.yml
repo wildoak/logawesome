@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+- 8.11.1
+env:
+  matrix:
+  - DEBUG="logawesome" DEBUG_COLORS=1
+install:
+- yarn install
+- yarn run build
+script:
+- yarn run test:coverage
+after_success: yarn run coverage
+deploy:
+  provider: npm
+  email: renoth@wildoak.de
+  api_key:
+    secure: eON7Bdekb5/GJBw86Vjb2yIFUqjaAIpJr6fji6G5gLQ0T8GQB8JY9U66Z+bqBT9WFE/LiUuBidKCK4WwfkeqO4+Bz3g6pv8GOzFF3OXydMxGMWRGLeVjW80K/1x6VPcbqMXwZtOtCCRprGBF5IP9nj5k/pQmn14CFLXdhp/2HmhrnskHzZXWtePtXGmRLIFtqhPEUU5T9HA0DMXi05CoQhvsVwHBm0Zj1m3DMU94mr9pgQExXuJKxBzLgqV2sGk1g0gHoLhSTMBK9YOy196uFX1lUv6KWxELqKF3DPg4H7cWZnh4YUdKjOrbG7GWS3CF8aIjparRBsmMFD4meHVAimjQdmwiQZqbigCiZEBSqRB0TcS5ltp8zkZtkgXSSSNforWZcwkLwIm0lxGzxZ4bpQrSRvwRfOHn0+XCMhx7iBpEyiAeWDvl4nguNxYygxQheBqs2t4m26yy6G24wEy/l9cMFuBSeT9M3bl2zerkzTV0L0Y0sM8JfENzGjUhtt/ew5E854/+GVMyJFOb1mtHriBNa6K9LDjWIiirRACRUbGdCvi6Nw0d43fEk2DM9+oOnf1r/ijVYCSNyChPxwKn+hN8q6HynMcBOSpu0m+MCVmJslaNPvInkkZMYQIRZj7/gs8ZT1jfdPR5QBwsUQQuoUAc0olM1JssfkA56jNKUzo=
+  skip_cleanup: true
+  on:
+    tags: true
