@@ -9,11 +9,9 @@ export const createStreamForEntrySupplier = timestampToFilePath => {
     let openStreams = 0;
     const streamEmitter = new EventEmitter();
 
-    if (debug.enabled) {
-        streamEmitter.on('close', () => {
-            debug('all streams closed');
-        });
-    }
+    streamEmitter.on('close', () => {
+        debug('all streams closed');
+    });
 
     const checkClosed = () => {
         if (openStreams === 0) {

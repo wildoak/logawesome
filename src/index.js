@@ -10,6 +10,8 @@ import {createStreamWriter} from './writer-stream';
 import {createRangeRotation} from './writer-stream-rangerotation';
 import {createRotationStreamSupplier} from './writer-stream-rotationstreamsupplier';
 import {createStreamForEntrySupplier} from './writer-stream-streamforentrysupplier';
+import {createFileStreamAppender} from './appender-filestream';
+import {createConsoleAppender} from './appender-console';
 
 export {
     LogSystem,
@@ -22,5 +24,7 @@ export {
     createStreamWriter,
     createRangeRotation,
     createRotationStreamSupplier,
-    createStreamForEntrySupplier
+    createStreamForEntrySupplier,
+    createFileStreamAppender,
+    createConsoleAppender
 };

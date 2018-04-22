@@ -5,15 +5,7 @@ import os from 'os';
 import {promisify} from 'util';
 import rimraf from 'rimraf';
 
-import {
-    LogSystem,
-    createJsonFormatter,
-    createRangeRotation,
-    createRotationStreamSupplier,
-    createStreamWriter,
-    createStreamForEntrySupplier,
-    createSeparateTransformer
-} from '../src';
+import {LogSystem, createFileStreamAppender} from '../src';
 
 const mkdtempAsync = promisify(fs.mkdtemp);
 const readFileAsync = promisify(fs.readFile);
@@ -31,31 +23,15 @@ test('should log to files with rotation', async t => {
 
     let i = 0;
     const logSystem = new LogSystem(() => i++);
-
-    const timestampToString = ts => `TS:${ts}`;
-    const formatter = createJsonFormatter(timestampToString);
-
-    const streamForEntry = createStreamForEntrySupplier(timestamp => {
-        return path.join(t.context.tmpdir, `${timestamp}.log`);
-    });
     
-    const shouldStreamRotate = createRangeRotation(2);
-    const streamSupplier = createRotationStreamSupplier(
-        streamForEntry,
-        shouldStreamRotate
-    );
+    const appender = createFileStreamAppender({
+        timestampToString: timestamp => `TS:${timestamp}`,
+        timestampToFilepath: timestamp => path.join(t.context.tmpdir, `${timestamp}.log`),
+        millisRange: 2,
+        entrySeparator: '\n'
+    });
 
-    const entrySeparator = '\n';
-
-    const streamWriter = createStreamWriter(
-        formatter,
-        streamSupplier,
-        entrySeparator
-    );
-
-    const separateTransformer = createSeparateTransformer(streamWriter);
-
-    logSystem.addAppender(separateTransformer);
+    logSystem.addAppender(appender);
 
     const logger = logSystem.createLogger({a: 'b'});
     logger `DEBUG` `a${{b: 'c'}}d${{e: 'f'}}`;
@@ -68,11 +44,13 @@ test('should log to files with rotation', async t => {
     // wait for all logs
     await new Promise(resolve => process.nextTick(resolve));
 
+    const closer = promisify(appender.close.bind(appender));
+
     // wait for close
-    await promisify(streamForEntry.close.bind(streamForEntry))();
+    await closer();
 
     // already closed
-    await new Promise(resolve => streamForEntry.close(resolve));
+    await closer();
 
     // already closed
     logger `ERROR` `should not log`;

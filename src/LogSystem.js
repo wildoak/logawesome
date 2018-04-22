@@ -1,8 +1,8 @@
 import debug from './debug';
 
 export default class LogSystem {
-    constructor (timestampProvider = undefined) {
-        this._timestampProvider = timestampProvider || (() => Date.now());
+    constructor (timestampProvider = () => Date.now()) {
+        this._timestampProvider = timestampProvider;
         this._appenders = [];
     }
 
